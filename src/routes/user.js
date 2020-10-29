@@ -73,8 +73,8 @@ router.get('/login', (req, res) => {
 });
 
 //getUsuario
-router.get('/getUsuario',(req,res) => {
-  const {CodigoUsuario} = req.body;
+router.get('/getUsuario/:CodigoUsuario',(req,res) => {
+  const {CodigoUsuario} = req.params;
   mysqlConnection.query('select u.CodigoUsuario,dpi,nombre,fechanac,correo,codigorol from usuario u left join  asignacion_rol a ON u.CodigoUsuario=a.CodigoUsuario where u.CodigoUsuario=?',CodigoUsuario, (err, rows, fields) => {
       if(!err) {
         if(rows==0){
