@@ -125,4 +125,45 @@ router.delete('/deleteUser',(req,res) => {
     });  
 });
 
+//editar usuario
+router.put('/updateUser',(req,res) => {
+  let {CodigoUsuario,dpi,nombre,fechanac,correo} = req.body;
+  mysqlConnection.query('select CodigoUsuario,dpi,nombre,fechanac,correo from usuario where CodigoUsuario=?',CodigoUsuario, (err, rows, fields) => {
+    if(!err) {
+      if(rows==0){
+        res.status(200).json({ status: 'vacio'});
+      }else{
+        let resul=rows[0];
+        if(dpi == undefined)
+          dpi = resul.dpi;
+        if(nombre == undefined)
+          nombre = resul.nombre;
+        if(fechanac == undefined)
+          fechanac = resul.fechanac;
+        if(correo == undefined)
+          correo = resul.correo;
+          
+        let arr = [dpi,nombre,fechanac,correo,CodigoUsuario];
+        
+        console.log(arr);
+        //***********acutalizar
+        mysqlConnection.query("UPDATE usuario set dpi=?, nombre=?, fechanac=?,"+
+                        "correo=?  where CodigoUsuario=?",arr, (err, rows, fields) => {
+          if(!err) {            
+            res.status(200).send({ status: true });
+          } else {
+            console.log(err);
+            res.status(409).send({ status: false });
+          }
+        }); 
+        //*********** */
+      }
+      } else {
+        console.log(err);
+        res.status(409).send({ status: false });
+      }
+    });  
+});
+
+
 module.exports = router;
