@@ -14,21 +14,40 @@ router.get('/user',(req,res) => {
       });  
 });
 //ingresar usuario
-router.post('/user', (req, res) => {
-  const { dpi,nombre,fechanac,correo,contraseña} = req.body;
+
+
+
+
+router.post('/user',async  (req, res) => {
+  const { dpi,nombre,fechanac,correo,contraseña,roles} = req.body;
   const val=[ dpi,nombre,fechanac,correo,contraseña];
-  console.log(val);
   const query = `INSERT INTO usuario(dpi,nombre,fechanac,correo,contraseña) VALUES (?,?,?,?,?)`;
-  
-  mysqlConnection.query(query, val, (err, rows, fields) => {
+  await mysqlConnection.query(query, val, (err, rows, fields) => {
     if(!err) {
-      res.status(200).json({status: 'Usuario guardado'});
-    } else {
+    //roles
+    if(roles ==undefined)
+      res.status(200).json({status: true});
+    else{  
+      const rolesArray = roles.split(',');
+      rolesArray.forEach(element => {
+        const query = `INSERT INTO asignacion_rol(CodigoUsuario,CodigoRol) VALUES ((select Codigousuario from usuario where dpi=? limit 1),?)`;
+         mysqlConnection.query(query, [dpi,element], (err, rows, fields) => {
+          if(!err) {
+          } else {
+            console.log(err);
+            res.status(409).send({ status: false});
+          }
+        });
+      });
+      
+      res.status(200).json({status: true});
+    }
+
+    } else {      
       console.log(err);
-      res.status(409).send({ message: 'Problema al registrarse.' });
+      res.status(409).send({ status: false});
     }
   });
-
 });
 
 
