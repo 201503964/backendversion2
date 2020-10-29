@@ -14,10 +14,6 @@ router.get('/user',(req,res) => {
       });  
 });
 //ingresar usuario
-
-
-
-
 router.post('/user',async  (req, res) => {
   const { dpi,nombre,fechanac,correo,contraseña,roles} = req.body;
   const val=[ dpi,nombre,fechanac,correo,contraseña];
@@ -50,6 +46,28 @@ router.post('/user',async  (req, res) => {
     } else {      
       console.log(err);
       res.status(409).send({ status: false});
+    }
+  });
+});
+
+//login
+router.post('/login', (req, res) => {
+  const { correo, contraseña} = req.body;
+  const val=[ correo, contraseña];
+  console.log(val);
+  const query = `SELECT * FROM usuario WHERE correo = ? AND contraseña=?`;
+  
+  mysqlConnection.query(query, val, (err, rows, fields) => {
+    if(!err) {
+      const usuario=rows[0];
+      console.log('**',usuario);
+      if(usuario==undefined){            
+          res.status(409).send({ message: 'Error al ingresar credenciales.' });
+      }
+      res.status(200).json(usuario);
+    } else {
+      console.log(err);
+      res.status(409).send({ message: 'Problemas al iniciar sesión.' });
     }
   });
 });
