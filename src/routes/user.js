@@ -51,7 +51,7 @@ router.post('/user',async  (req, res) => {
 });
 
 //login
-router.post('/login', (req, res) => {
+router.get('/login', (req, res) => {
   const { correo, contraseña} = req.body;
   const val=[ correo, contraseña];
   console.log(val);
@@ -72,5 +72,30 @@ router.post('/login', (req, res) => {
   });
 });
 
+//getUsuario
+router.get('/getUsuario',(req,res) => {
+  const {CodigoUsuario} = req.body;
+  mysqlConnection.query('select u.CodigoUsuario,dpi,nombre,fechanac,correo,codigorol from usuario u left join  asignacion_rol a ON u.CodigoUsuario=a.CodigoUsuario where u.CodigoUsuario=?',CodigoUsuario, (err, rows, fields) => {
+      if(!err) {
+        if(rows==0){
+          res.status(200).json({ status: 'vacio'});
+        }else{
+          let roles='' ;
+          if(rows.length>1){          
+            rows.forEach(e => {
+              roles+=e.codigorol+",";
+            });
+          }
+          let resul=rows[0];
+          resul.codigorol=roles;
+          res.status(200).json(resul);
+        }
+        
+      } else {
+        console.log(err);
+        res.status(409).send({ status: false});
+      }
+    });  
+});
 
 module.exports = router;
