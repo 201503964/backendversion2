@@ -98,4 +98,19 @@ router.get('/getUsuario',(req,res) => {
     });  
 });
 
+//getUsuarios
+router.get('/getUsuarios', (req,res) => {
+  
+  mysqlConnection.query('SELECT * FROM usuario',(err, rows, fields) => {
+    if(!err) {
+      res.status(200).json(rows);
+    } else {
+      console.log(err);
+      res.status(409).send({ message: 'Problema al solicitar usuarios.' });
+    }
+  });  
+   
+});
+
+
 module.exports = router;
