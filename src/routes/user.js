@@ -22,25 +22,29 @@ router.post('/user',async  (req, res) => {
   const { dpi,nombre,fechanac,correo,contraseña,roles} = req.body;
   const val=[ dpi,nombre,fechanac,correo,contraseña];
   const query = `INSERT INTO usuario(dpi,nombre,fechanac,correo,contraseña) VALUES (?,?,?,?,?)`;
+  
   await mysqlConnection.query(query, val, (err, rows, fields) => {
     if(!err) {
     //roles
     if(roles ==undefined)
       res.status(200).json({status: true});
     else{  
-      const rolesArray = roles.split(',');
-      rolesArray.forEach(element => {
+      try {
+        const rolesArray = roles.split(',');        
+        rolesArray.forEach(element => {
         const query = `INSERT INTO asignacion_rol(CodigoUsuario,CodigoRol) VALUES ((select Codigousuario from usuario where dpi=? limit 1),?)`;
          mysqlConnection.query(query, [dpi,element], (err, rows, fields) => {
           if(!err) {
           } else {
             console.log(err);
-            res.status(409).send({ status: false});
           }
         });
-      });
-      
+      });      
       res.status(200).json({status: true});
+      } catch (error) {
+        
+        res.status(409).send({ status: false});
+      }
     }
 
     } else {      
