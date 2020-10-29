@@ -106,11 +106,23 @@ router.get('/getUsuarios', (req,res) => {
       res.status(200).json(rows);
     } else {
       console.log(err);
-      res.status(409).send({ message: 'Problema al solicitar usuarios.' });
+      res.status(409).send({ status: false });
     }
   });  
    
 });
 
+//eliminar usuario
+router.delete('/deleteUser',(req,res) => {
+  const {CodigoUsuario} = req.body;
+  mysqlConnection.query('delete from usuario where CodigoUsuario=? limit 1 ',CodigoUsuario, (err) => {
+      if(!err) {
+        res.status(200).send({ status: true });
+      } else {
+        console.log(err);
+        res.status(409).send({ status: false });
+      }
+    });  
+});
 
 module.exports = router;
