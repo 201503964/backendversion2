@@ -127,8 +127,8 @@ router.delete('/deleteUser',(req,res) => {
 
 //editar usuario
 router.put('/updateUser',(req,res) => {
-  let {CodigoUsuario,dpi,nombre,fechanac,correo,contraseña} = req.body;
-  mysqlConnection.query('select CodigoUsuario,dpi,nombre,fechanac,correo,contraseña from usuario where CodigoUsuario=?',CodigoUsuario, (err, rows, fields) => {
+  let {Codigousuario,dpi,nombre,fechanac,correo,contraseña} = req.body;
+  mysqlConnection.query('select CodigoUsuario,dpi,nombre,fechanac,correo,contraseña from usuario where CodigoUsuario=?',Codigousuario, (err, rows, fields) => {
     if(!err) {
       if(rows==0){
         res.status(200).json({ status: 'vacio'});
@@ -143,7 +143,7 @@ router.put('/updateUser',(req,res) => {
         if(correo == undefined)
           correo = resul.correo;
           
-        let arr = [dpi,nombre,fechanac,correo,contraseña,CodigoUsuario];
+        let arr = [dpi,nombre,fechanac,correo,contraseña,Codigousuario];
         
         console.log(arr);
         //***********acutalizar
