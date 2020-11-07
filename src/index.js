@@ -19,6 +19,9 @@ app.use(require('./routes/roles'));
 app.use(require('./routes/sede'));
 app.use(require('./routes/producto'));
 app.use(require('./routes/bodega'));
+app.use(require('./routes/categories'));
+app.use(require('./routes/cliente'));
+app.use(require('./routes/asignacion_categories'))
 
 //conexión con la base de datos
 app.listen(PORT, () =>{

@@ -13,6 +13,7 @@ router.get('/user',(req,res) => {
         }
       });  
 });
+
 //ingresar usuario
 router.post('/user',async  (req, res) => {
   const { dpi,nombre,fechanac,correo,contraseña,roles} = req.body;
