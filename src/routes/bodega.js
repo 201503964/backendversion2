@@ -69,7 +69,7 @@ router.get('/bodega/:codigobodega',(req,res) => {
     const {codigobodega} = req.params;;
     mysqlConnection.query('select * from bodega where codigobodega=? limit 1 ',codigobodega, (err,rows) => {
         if(!err) {
-            res.status(200).json(rows);
+            res.status(200).json(rows[0]);
         } else {
           console.log(err);
           res.status(409).send({ message: 'Problema al solicitar bodega' });
