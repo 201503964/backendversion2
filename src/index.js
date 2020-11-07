@@ -15,6 +15,9 @@ app.get('/', (req,res) => {
 });
 
 app.use(require('./routes/user'));
+app.use(require('./routes/categories'));
+app.use(require('./routes/cliente'));
+app.use(require('./routes/asignacion_categories'))
 
 //conexión con la base de datos
 app.listen(PORT, () =>{
