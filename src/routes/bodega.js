@@ -64,4 +64,17 @@ router.get('/bodega',(req,res) => {
       });  
 });
 
+//botener una bodega
+router.get('/bodega/:codigobodega',(req,res) => {
+    const {codigobodega} = req.params;;
+    mysqlConnection.query('select * from bodega where codigobodega=? limit 1 ',codigobodega, (err,rows) => {
+        if(!err) {
+            res.status(200).json(rows);
+        } else {
+          console.log(err);
+          res.status(409).send({ message: 'Problema al solicitar bodega' });
+        }
+      });  
+  });
+
 module.exports = router;
