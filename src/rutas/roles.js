@@ -50,4 +50,23 @@ router.get('/rolesasignados/:identificador',(req,res) => {
 });
 
 
+//desasignar rol a usuario
+router.post('/desasignarrol',async  (req, res) => {
+
+  const { CodigoUsuario,CodigoRol} = req.body;
+  const val=[CodigoUsuario,CodigoRol];
+  
+  const query = `delete from asignacion_rol where CodigoUsuario=? and CodigoRol=?`;
+  
+  await mysqlConnection.query(query, val, (err, rows, fields) => {
+    if(!err) {
+      res.status(200).json({estado: true});
+    } else {      
+      console.log(err);
+      res.status(409).send({ estado: false});
+    }
+  });
+});
+
+
 module.exports = router;
