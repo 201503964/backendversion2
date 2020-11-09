@@ -34,5 +34,28 @@ router.delete('/deleteAssignCategory',(req,res)=>{
     });
 });
 
+//Obtener categorias de los productos 
+router.get('/getCategoryProduct',(req,res)=>{
+    const {codigoproducto } = req.body;
+    const val = [codigoproducto];
+    const query = 'select c.codigocategoria, c.nombrecategoria, p.codigoproducto from categoria c, producto p, asignacion_categoria ac WHERE p.codigoproducto = ? AND c.codigocategoria = ac.codigocategoria AND p.codigoproducto = ac.codigoproducto'
+
+    mysqlConnection.query(query,val,(err)=>{
+        if(!err){
+
+            if( rows  == 0 ){
+                res.status(200).json({status:'vacio'});
+            }else{
+                res.status(200).json(rows);
+            }
+            
+
+        }else{
+            console.log(err);
+            res.status(409).send({message: 'Problema al obtener categorias.'});
+        }
+    });
+
+});
 
 module.exports = router;
